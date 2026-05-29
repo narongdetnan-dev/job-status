@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HR Dashboard</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f9;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>HR Dashboard</h2>
+
+<div id="list"></div>
+
+<script>
+
+const DATA_URL = "https://raw.githubusercontent.com/narongdetnan-dev/job-status/main/applications.json";
+
+/* 👉 ใส่ URL จาก Power Automate */
+const API_URL = "PUT_YOUR_FLOW_URL_HERE";
+
+async function load(){
+
+  let res = await fetch(DATA_URL);
+  let data = await res.json();
+
+  let html = "";
+
+  data.forEach((item) => {
+
+    html += `
+      <div class="card">
+        <b>${item.FullName}</b><br>
+        ${item.Position}<br><br>
+
+        <select id="status-${item.IDCard}">
+          <option ${item.Status==="Applied"?"selected":""}>Applied</option>
+          <option ${item.Status==="Screening"?"selected":""}>Screening</option>
+          <option ${item.Status==="Interview"?"selected":""}>Interview</option>
+          <option ${item.Status==="Offer"?"selected":""}>Offer</option>
+          <option ${item.Status==="Hired"?"selected":""}>Hired</option>
+        </select>
+
+        <br>
+
+        <button onclick="update('${item.IDCard}')">Update</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("list").innerHTML = html;
+}
+
+async function update(id){
+
+  let status = document.getElementById("status-"+id).value;
+
+  await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      idcard: id,
+      status: status
+    })
+  });
+
+  alert("✅ Updated!");
+}
+
+load();
+
+</script>
+
+</body>
+</html>
