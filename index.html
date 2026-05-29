@@ -4,41 +4,119 @@
   <title>Application Status</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
- <style>
-.timeline {
-  margin-top: 15px;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial;
+      background: #f5f7fb;
+    }
 
-.step {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
+    /* Header */
+    .header {
+      background: #1e293b;
+      color: white;
+      padding: 15px 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
 
-.circle {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  margin-right: 10px;
-  background: #ccc;
-}
+    /* Container */
+    .container {
+      max-width: 420px;
+      margin: 50px auto;
+      padding: 20px;
+    }
 
-.active {
-  background: #2563eb;
-}
+    /* Card */
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
 
-.done {
-  background: #16a34a;
-}
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
 
-.line {
-  height: 20px;
-  width: 2px;
-  background: #ccc;
-  margin-left: 5px;
-}
-</style>
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
 
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #result {
+      margin-top: 20px;
+    }
+
+    .result-card {
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #eee;
+      margin-top: 10px;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .loading {
+      color: #555;
+    }
+
+    /* Timeline */
+    .timeline {
+      margin-top: 20px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .circle {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 10px;
+      background: #ccc;
+    }
+
+    .done {
+      background: #16a34a;
+    }
+
+    .active {
+      background: #2563eb;
+    }
+
+  </style>
 </head>
 
 <body>
@@ -62,14 +140,42 @@
 
 <script>
 
-function getStatusClass(status){
-  if(status === "Applied") return "applied";
-  if(status === "Interview") return "interview";
-  if(status === "Offer") return "offer";
-  return "applied";
+/* ✅ แก้ตรงนี้ถ้า repo เปลี่ยน */
+const DATA_URL = "https://raw.githubusercontent.com/narongdetnan-dev/job-status/main/applications.json";
+
+/* ✅ Timeline logic */
+function renderTimeline(status){
+  const steps = ["Applied","Screening","Interview","Offer","Hired"];
+
+  let html = '<div class="timeline">';
+  let index = steps.indexOf(status);
+
+  steps.forEach((step, i) => {
+
+    let className = "";
+
+    if(i < index){
+      className = "done";
+    } else if(i === index){
+      className = "active";
+    }
+
+    html += `
+      <div class="step">
+        <div class="circle ${className}"></div>
+        ${step}
+      </div>
+    `;
+  });
+
+  html += '</div>';
+
+  return html;
 }
 
+/* ✅ Main function */
 async function check() {
+
   let id = document.getElementById("idcard").value;
   let result = document.getElementById("result");
 
@@ -79,34 +185,38 @@ async function check() {
   }
 
   result.innerHTML = "<div class='loading'>Checking...</div>";
-  
+
   try {
-    let res = await fetch("https://raw.githubusercontent.com/narongdetnan-dev/job-status/main/applications.json");
+    let res = await fetch(DATA_URL);
     let data = await res.json();
 
     let found = data.find(x => x.IDCard === id);
 
     if (found) {
 
-      let statusClass = getStatusClass(found.Status);
-
       result.innerHTML = `
         <div class="result-card">
+
           <div class="label">Name</div>
           <div><b>${found.FullName}</b></div>
 
           <div class="label">Position</div>
           <div>${found.Position}</div>
 
-          <div class="label">Status</div>
-          <div class="badge ${statusClass}">${found.Status}</div>
+          <div class="label">Current Status</div>
+          <div><b>${found.Status}</b></div>
+
+          ${renderTimeline(found.Status)}
+
         </div>
       `;
+
     } else {
       result.innerHTML = "<div class='error'>❌ ID Card not found</div>";
     }
 
   } catch (err) {
+    console.error(err);
     result.innerHTML = "<div class='error'>⚠️ Error loading data</div>";
   }
 }
