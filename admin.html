@@ -93,44 +93,52 @@ async function load(){
 // }
 async function update(id){
 
-  const token = "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";  // 🔥 ใส่ token ตรงนี้
+  const token = "YOUR_TOKEN";
   const owner = "narongdetnan-dev";
   const repo = "job-status";
   const path = "applications.json";
 
   let status = document.getElementById("status-" + id).value;
 
-  // ✅ 1. โหลด JSON ปัจจุบัน
+  // ✅ โหลด JSON
   let res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`);
   let data = await res.json();
 
   let content = JSON.parse(atob(data.content));
 
-  // ✅ 2. update status
+  // ✅ update
   content.forEach(item => {
     if(item.IDCard === id){
       item.Status = status;
     }
   });
 
-  // ✅ 3. encode ใหม่
+  // ✅ encode
   let updatedContent = btoa(JSON.stringify(content, null, 2));
 
-  // ✅ 4. push กลับ GitHub
-  await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+  // ✅ PUT กลับ
+  let response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
     method: "PUT",
     headers: {
       "Authorization": "Bearer " + token,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      message: "Update status via admin",
+      message: "Update status",
       content: updatedContent,
       sha: data.sha
     })
   });
 
-  alert("✅ Updated จริงแล้ว!");
+  let result = await response.json();
+
+  console.log("GitHub Response:", result);
+
+  if(response.ok){
+    alert("✅ Updated!");
+  }else{
+    alert("❌ Error: " + result.message);
+  }
 }
 
   
