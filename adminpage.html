@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HR Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f4f6f9;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    select {
+      padding: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>HR Dashboard</h2>
+
+<div id="list"></div>
+
+<script>
+
+let DATA_URL = "https://raw.githubusercontent.com/narongdetnan-dev/job-status/main/applications.json";
+
+async function load(){
+  let res = await fetch(DATA_URL);
+  let data = await res.json();
+
+  let html = "";
+
+  data.forEach((item, index) => {
+    html += `
+      <div class="card">
+        <b>${item.FullName}</b><br>
+        ${item.Position}<br><br>
+
+        Status:
+        <select onchange="update(${index}, this.value)">
+          <option ${item.Status==="Applied"?"selected":""}>Applied</option>
+          <option ${item.Status==="Screening"?"selected":""}>Screening</option>
+          <option ${item.Status==="Interview"?"selected":""}>Interview</option>
+          <option ${item.Status==="Offer"?"selected":""}>Offer</option>
+          <option ${item.Status==="Hired"?"selected":""}>Hired</option>
+        </select>
+      </div>
+    `;
+  });
+
+  document.getElementById("list").innerHTML = html;
+}
+
+function update(index, value){
+  alert("⚠️ Demo mode\n\nTo update real data ต้องใช้ API backend (GitHub Push / Power Automate)");
+}
+
+load();
+
+</script>
+
+</body>
+</html>
