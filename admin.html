@@ -99,12 +99,13 @@ function update(id){
   let status = document.getElementById("status-" + id).value;
 
   let url = "https://forms.office.com/Pages/ResponsePage.aspx?id=02tr9sLrVE-HadIoWN6XxSLvAf5_zf9HhBTnm4JxeRhUOVdRWkFDRUxPVzBVS0I2Q1I5SElKMjQxNC4u"
-            + "&r1234567890=" + id
-            + "&r0987654321=" + status;
+            + "&r1234567890=" + encodeURIComponent(id)
+            + "&r0987654321=" + encodeURIComponent(status);
 
   window.open(url, "_blank");
 
 }
+
 
 </script>
 
