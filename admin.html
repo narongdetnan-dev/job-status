@@ -91,16 +91,49 @@ async function load(){
 
 //   alert("✅ Updated!");
 // }
-function update(id){
+async function update(id){
+
+  const token = "YOUR_GITHUB_TOKEN";  // 🔥 ใส่ token ตรงนี้
+  const owner = "narongdetnan-dev";
+  const repo = "job-status";
+  const path = "applications.json";
 
   let status = document.getElementById("status-" + id).value;
 
-  let url = "https://forms.office.com/Pages/ResponsePage.aspx?id=02tr9sLrVE-HadIoWN6XxSLvAf5_zf9HhBTnm4JxeRhUOVdRWkFDRUxPVzBVS0I2Q1I5SElKMjQxNC4u"
-            + "&r3f51291cefd54a029185c4a918c336f8=" + encodeURIComponent(id)
-            + "&ra24e8e7fbbb640ee922bd59953e609b9=" + encodeURIComponent(status);
+  // ✅ 1. โหลด JSON ปัจจุบัน
+  let res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`);
+  let data = await res.json();
 
-  window.open(url, "_blank");
+  let content = JSON.parse(atob(data.content));
+
+  // ✅ 2. update status
+  content.forEach(item => {
+    if(item.IDCard === id){
+      item.Status = status;
+    }
+  });
+
+  // ✅ 3. encode ใหม่
+  let updatedContent = btoa(JSON.stringify(content, null, 2));
+
+  // ✅ 4. push กลับ GitHub
+  await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+    method: "PUT",
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: "Update status via admin",
+      content: updatedContent,
+      sha: data.sha
+    })
+  });
+
+  alert("✅ Updated จริงแล้ว!");
 }
+
+  
 load();
   
 
