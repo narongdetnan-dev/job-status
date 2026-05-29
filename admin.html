@@ -74,23 +74,23 @@ async function load(){
   document.getElementById("list").innerHTML = html;
 }
 
-async function update(id){
+// async function update(id){
 
-  let status = document.getElementById("status-"+id).value;
+//   let status = document.getElementById("status-"+id).value;
 
-  await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      idcard: id,
-      status: status
-    })
-  });
+//   await fetch(API_URL, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify({
+//       idcard: id,
+//       status: status
+//     })
+//   });
 
-  alert("✅ Updated!");
-}
+//   alert("✅ Updated!");
+// }
 
 load();
   
