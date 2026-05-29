@@ -94,15 +94,16 @@ async function load(){
 
 load();
   
-async function update(id){
+function update(id){
 
   let status = document.getElementById("status-" + id).value;
 
   let url = "https://forms.office.com/Pages/ResponsePage.aspx?id=02tr9sLrVE-HadIoWN6XxSLvAf5_zf9HhBTnm4JxeRhUOVdRWkFDRUxPVzBVS0I2Q1I5SElKMjQxNC4u"
-            + "&r1234567890=" + encodeURIComponent(id)
-            + "&r0987654321=" + encodeURIComponent(status);
+            + "&r3f51291cefd54a029185c4a918c336f8=" + encodeURIComponent(id)
+            + "&ra24e8e7fbbb640ee922bd59953e609b9=" + encodeURIComponent(status);
 
   window.open(url, "_blank");
+
    alert("✅ Updated!");
 
 }
