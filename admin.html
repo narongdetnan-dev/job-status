@@ -94,7 +94,7 @@ async function load(){
 
 load();
   
-function update(id){
+async function update(id){
 
   let status = document.getElementById("status-" + id).value;
 
@@ -103,6 +103,7 @@ function update(id){
             + "&r0987654321=" + encodeURIComponent(status);
 
   window.open(url, "_blank");
+   alert("✅ Updated!");
 
 }
 
