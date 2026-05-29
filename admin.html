@@ -91,9 +91,6 @@ async function load(){
 
 //   alert("✅ Updated!");
 // }
-
-load();
-  
 function update(id){
 
   let status = document.getElementById("status-" + id).value;
@@ -103,10 +100,10 @@ function update(id){
             + "&ra24e8e7fbbb640ee922bd59953e609b9=" + encodeURIComponent(status);
 
   window.open(url, "_blank");
-
-   alert("✅ Updated!");
-
 }
+load();
+  
+
 
 
 </script>
