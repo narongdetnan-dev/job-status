@@ -79,7 +79,7 @@ async function check() {
   }
 
   result.innerHTML = "<div class='loading'>Checking...</div>";
-
+  
   try {
     let res = await fetch("https://raw.githubusercontent.com/narongdetnan-dev/job-status/main/applications.json");
     let data = await res.json();
