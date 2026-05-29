@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Check Status</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Segoe UI;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 350px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .ok { color: green; }
+    .err { color: red; }
+
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Check Application Status By ID Card</h2>
+
+  <input id="idcard" placeholder="Enter ID Card Number">
+  <button onclick="check()">Check</button>
+  
+
+  <div id="result"></div>
+</div>
+
+<script>
+async function check() {
+  console.log("clicked ✅");
+
+  let id = document.getElementById("idcard").value;
+  let result = document.getElementById("result");
+
+  if (!id) {
+    result.innerHTML = "<span class='err'>Enter ID Card</span>";
+    return;
+  }
+
+  result.innerHTML = "Loading...";
+
+  try {
+    let res = await fetch("https://raw.githubusercontent.com/narongdetnan-dev/job-status/refs/heads/main/applications.json");
+
+    let data = await res.json();
+
+    let found = data.find(x => x.IDCard === id);
+
+    if (found) {
+      result.innerHTML =
+        "<div class='ok'>" +
+        "<b>Name:</b> " + found.FullName + "<br>" +
+        "<b>Position:</b> " + found.Position + "<br>" +
+        "<b>Status:</b> " + found.Status +
+        "</div>";
+    } else {
+      result.innerHTML = "<span class='err'>Not found</span>";
+    }
+
+  } catch (e) {
+    console.error(e);
+    result.innerHTML = "<span class='err'>Error loading data</span>";
+  }
+}
+</script>
+
+
+
+</body>
+</html>
