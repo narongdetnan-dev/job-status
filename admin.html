@@ -93,7 +93,7 @@ async function load(){
 // }
 async function update(id){
 
-  const token = "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";
+  const token = "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";  
   const owner = "narongdetnan-dev";
   const repo = "job-status";
   const path = "applications.json";
@@ -106,12 +106,16 @@ async function update(id){
 
   let content = JSON.parse(atob(data.content));
 
-  // ✅ update
+  console.log("Before:", content);
+
+  // ✅ update FIX แล้ว
   content.forEach(item => {
-    if(item.IDCard === id){
+    if(String(item.IDCard) === String(id)){
       item.Status = status;
     }
   });
+
+  console.log("After:", content);
 
   // ✅ encode
   let updatedContent = btoa(JSON.stringify(content, null, 2));
