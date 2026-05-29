@@ -93,6 +93,18 @@ async function update(id){
 }
 
 load();
+  
+function update(id){
+
+  let status = document.getElementById("status-" + id).value;
+
+  let url = "https://forms.office.com/Pages/ResponsePage.aspx?id=XXX"
+            + "&r1234567890=" + id
+            + "&r0987654321=" + status;
+
+  window.open(url, "_blank");
+
+}
 
 </script>
 
